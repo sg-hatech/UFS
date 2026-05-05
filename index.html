@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UFS Financial Planning App Wireframe</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">UFS</div>
+        <div>
+          <strong>Financial Planning</strong>
+          <span>Client presentation prototype</span>
+        </div>
+      </div>
+      <nav class="steps" aria-label="Planning sections">
+        <a href="#profile" class="active">Client Profile</a>
+        <a href="#objectives">Objectives</a>
+        <a href="#assets">Assets & Liabilities</a>
+        <a href="#cashflow">Cashflow</a>
+        <a href="#insurance">Insurance</a>
+        <a href="#allocation">Allocation</a>
+        <a href="#proposed-assets">Proposed Assets</a>
+        <a href="#projection">FI Projection</a>
+        <a href="#recommendations">Recommendations</a>
+      </nav>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Unicorn Financial Solutions</p>
+          <h1>Family Wealth Planning</h1>
+          <p class="tagline">-- A FREEHOLD LIFE FOR ALL --</p>
+        </div>
+      </header>
+
+      <section id="profile" class="section-grid">
+        <div>
+          <p class="eyebrow">Section 1</p>
+          <h2>Client Profile</h2>
+          <p class="section-copy">Simple personal details for client and spouse. This becomes the anchor for age-based timelines, CPF assumptions, and risk calculations.</p>
+        </div>
+        <div class="panel">
+          <div class="profile-grid">
+            <label>Client 1 Name <input type="text" data-profile="clientName" value="Tan Wei Ming"></label>
+            <label>Residential Status
+              <select data-profile="residentialStatus">
+                <option value="Singapore Citizen">Singapore Citizen</option>
+                <option value="Singapore PR" selected>Singapore PR</option>
+                <option value="Foreigner">Foreigner</option>
+              </select>
+            </label>
+            <label>Birthday <input type="date" data-profile="birthday" value="1986-03-12"></label>
+            <label>Current Age <input type="number" min="18" max="100" step="1" data-profile="age" value="40"></label>
+            <label>Occupation <input type="text" data-profile="occupation" value="Senior Manager"></label>
+            <label>Employment Status
+              <select data-profile="employmentStatus">
+                <option selected>Employed</option>
+                <option>Self-employed</option>
+                <option>Business owner</option>
+                <option>Not working</option>
+                <option>Retired</option>
+              </select>
+            </label>
+            <label>Client 2 / Spouse Name <input type="text" data-profile="spouseName" value="Tan Mei Ling"></label>
+            <label>Spouse Residential Status
+              <select data-profile="spouseResidentialStatus">
+                <option>Singapore Citizen</option>
+                <option selected>Singapore PR</option>
+                <option>Foreigner</option>
+              </select>
+            </label>
+            <label>Spouse Birthday <input type="date" data-profile="spouseBirthday" value="1988-07-20"></label>
+            <label>Spouse Age <input type="number" min="18" max="100" step="1" data-profile="spouseAge" value="38"></label>
+            <label>Marital Status
+              <select data-profile="maritalStatus">
+                <option>Single</option>
+                <option selected>Married</option>
+                <option>Divorced</option>
+                <option>Widowed</option>
+              </select>
+            </label>
+            <label>Dependants <input type="text" data-profile="dependants" value="2 children"></label>
+            <label>Years to Support Dependants <input type="number" min="0" max="40" step="1" data-profile="supportYears" value="16"></label>
+            <label>Financial Independence Age <input type="number" min="45" max="85" step="1" data-profile="fiAge" value="60"></label>
+          </div>
+        </div>
+      </section>
+
+      <section id="objectives" class="data-section">
+        <div class="section-heading-row">
+          <div>
+            <p class="eyebrow">Section 2</p>
+            <h2>Financial Objectives</h2>
+            <p class="section-copy">Enter one financial independence objective and two other goals. The timeline uses client age plus years to achieve, and the bar chart shows the amount required.</p>
+          </div>
+        </div>
+        <div class="panel objective-panel">
+          <table class="objective-table">
+            <thead>
+              <tr>
+                <th>Objective</th>
+                <th>Years to Achieve</th>
+                <th>Amount Required</th>
+                <th>Priority</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="text" data-objective-name value="Financial Independence"></td>
+                <td><input type="number" min="0" max="60" step="1" data-objective-years value="20"></td>
+                <td><input type="number" min="0" step="1000" data-objective-amount value="1500000"></td>
+                <td>
+                  <select data-objective-priority>
+                    <option selected>High</option>
+                    <option>Medium</option>
+                    <option>Low</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" data-objective-name value=""></td>
+                <td><input type="number" min="0" max="60" step="1" data-objective-years value=""></td>
+                <td><input type="number" min="0" step="1000" data-objective-amount value=""></td>
+                <td>
+                  <select data-objective-priority>
+                    <option>High</option>
+                    <option selected>Medium</option>
+                    <option>Low</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" data-objective-name value=""></td>
+                <td><input type="number" min="0" max="60" step="1" data-objective-years value=""></td>
+                <td><input type="number" min="0" step="1000" data-objective-amount value=""></td>
+                <td>
+                  <select data-objective-priority>
+                    <option>High</option>
+                    <option>Medium</option>
+                    <option selected>Low</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel">
+          <h3>Timeline</h3>
+          <div class="objective-timeline" id="objectiveTimeline"></div>
+        </div>
+      </section>
+
+      <section id="assets" class="data-section">
+        <div class="section-heading-row">
+          <div>
+            <p class="eyebrow">Section 3</p>
+            <h2>Assets & Liabilities Input</h2>
+            <p class="section-copy">Enter current assets and liabilities in the same planning categories used by the workbook. These totals feed net worth and the projection starting point.</p>
+          </div>
+          <div class="summary-stack">
+            <div><span>Total Assets</span><strong id="totalAssets">S$0</strong></div>
+            <div><span>Total Liabilities</span><strong id="totalLiabilities">S$0</strong></div>
+            <div class="accent"><span>Net Worth</span><strong id="netWorth">S$0</strong></div>
+          </div>
+        </div>
+
+        <div class="input-two-col">
+          <div class="input-panel">
+            <h3>Assets</h3>
+            <div class="input-grid">
+              <label>Home / Residential Property <input type="number" min="0" step="1000" data-asset="property" value="900000"></label>
+              <label>Bank Deposits / Cash <input type="number" min="0" step="1000" data-asset="cash" value="85000"></label>
+              <label>Shares / Unit Trusts <input type="number" min="0" step="1000" data-asset="shares" value="120000"></label>
+              <label>Unicorn Advised Fund <input type="number" min="0" step="1000" data-asset="uaf" value="80000"></label>
+              <label>CPF OA <input type="number" min="0" step="1000" data-asset="cpfOa" value="180000"></label>
+              <label>CPF SA <input type="number" min="0" step="1000" data-asset="cpfSa" value="95000"></label>
+              <label>CPF MA <input type="number" min="0" step="1000" data-asset="cpfMa" value="68000"></label>
+              <label>SRS Account <input type="number" min="0" step="1000" data-asset="srs" value="45000"></label>
+              <label>Bonds / Fixed Income <input type="number" min="0" step="1000" data-asset="bond" value="60000"></label>
+              <label>Endowment / Annuity <input type="number" min="0" step="1000" data-asset="annuity" value="70000"></label>
+              <label>Other Assets <input type="number" min="0" step="1000" data-asset="others" value="30000"></label>
+            </div>
+          </div>
+
+          <div class="input-panel">
+            <h3>Liabilities</h3>
+            <div class="input-grid">
+              <label>Home Mortgage <input type="number" min="0" step="1000" data-liability="homeMortgage" value="520000"></label>
+              <label>Investment Property Mortgage <input type="number" min="0" step="1000" data-liability="investmentMortgage" value="0"></label>
+              <label>Bank Overdraft <input type="number" min="0" step="1000" data-liability="overdraft" value="0"></label>
+              <label>Credit Card Balance <input type="number" min="0" step="1000" data-liability="creditCard" value="8000"></label>
+              <label>Renovation Loan <input type="number" min="0" step="1000" data-liability="renovation" value="0"></label>
+              <label>Income Tax Payable <input type="number" min="0" step="1000" data-liability="taxPayable" value="6000"></label>
+              <label>Other Loans / Liabilities <input type="number" min="0" step="1000" data-liability="others" value="12000"></label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cashflow" class="data-section">
+        <div class="section-heading-row">
+          <div>
+            <p class="eyebrow">Section 4</p>
+            <h2>Annual Inflow & Outflow Input</h2>
+            <p class="section-copy">Use annualized amounts for cash and CPF movement. This follows the workbook structure: inflows, outflows, savings and investment, CPF usage, and surplus/shortfall.</p>
+          </div>
+          <div class="summary-stack">
+            <div><span>Total Inflow</span><strong id="totalInflow">S$0</strong></div>
+            <div><span>Total Outflow</span><strong id="totalOutflow">S$0</strong></div>
+            <div class="accent"><span>Annual Surplus</span><strong id="annualSurplus">S$0</strong></div>
+          </div>
+        </div>
+
+        <div class="input-two-col">
+          <div class="input-panel">
+            <h3>Annual Inflows</h3>
+            <div class="input-grid">
+              <label>Client Age for CPF <input type="number" min="18" max="90" step="1" data-cpf-age readonly value="40"></label>
+              <label>CPF Eligibility <input type="text" data-cpf-output="eligibility" readonly value="Eligible"></label>
+              <label>Salary <input type="number" min="0" step="1000" data-inflow="salary" value="144000"></label>
+              <label>Bonus <input type="number" min="0" step="1000" data-inflow="bonus" value="24000"></label>
+              <label>Other Cash Income <input type="number" min="0" step="1000" data-inflow="otherCash" value="12000"></label>
+              <label>CPF Payable Wages <input type="number" min="0" step="1" data-cpf-output="payableWages" readonly value="0"></label>
+              <label>Employer CPF <input type="number" min="0" step="1" data-cpf-output="employer" readonly value="0"></label>
+              <label>Employee CPF <input type="number" min="0" step="1" data-cpf-output="employee" readonly value="0"></label>
+              <label>CPF OA Contribution <input type="number" min="0" step="1" data-inflow="cpfOa" data-cpf-output="oa" readonly value="0"></label>
+              <label>CPF SA / RA Contribution <input type="number" min="0" step="1" data-inflow="cpfSa" data-cpf-output="sa" readonly value="0"></label>
+              <label>CPF MA Contribution <input type="number" min="0" step="1" data-inflow="cpfMa" data-cpf-output="ma" readonly value="0"></label>
+              <label>SRS Contribution <input type="number" min="0" step="1000" data-inflow="srs" value="0"></label>
+            </div>
+            <p class="input-note">CPF auto-calculation uses 2026 Singapore Citizen / SPR third-year rates, S$8,000 monthly Ordinary Wage ceiling, and S$102,000 annual salary ceiling.</p>
+          </div>
+
+          <div class="input-panel">
+            <h3>Annual Outflows</h3>
+            <div class="input-grid">
+              <label>Income Tax <input type="number" min="0" step="1000" data-outflow="tax" value="16000"></label>
+              <label>Living / Family Expenses <input type="number" min="0" step="1000" data-outflow="living" value="72000"></label>
+              <label>Home Expenses <input type="number" min="0" step="1000" data-outflow="home" value="12000"></label>
+              <label>Mortgage Payments - Cash <input type="number" min="0" step="1000" data-outflow="mortgageCash" value="18000"></label>
+              <label>Mortgage Payments - CPF <input type="number" min="0" step="1000" data-outflow="mortgageCpf" value="24000"></label>
+              <label>Insurance Premium - Cash <input type="number" min="0" step="1000" data-outflow="insuranceCash" value="10100"></label>
+              <label>Insurance Premium - CPF <input type="number" min="0" step="1000" data-outflow="insuranceCpf" value="1800"></label>
+              <label>Cash Investment <input type="number" min="0" step="1000" data-outflow="cashInvestment" value="24000"></label>
+              <label>CPF Investment <input type="number" min="0" step="1000" data-outflow="cpfInvestment" value="6000"></label>
+              <label>Transportation <input type="number" min="0" step="1000" data-outflow="transport" value="9600"></label>
+              <label>Other Expenses <input type="number" min="0" step="1000" data-outflow="others" value="6000"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="cashflow-breakdown">
+          <div><span>Cash Inflow</span><strong id="cashInflow">S$0</strong></div>
+          <div><span>CPF Inflow</span><strong id="cpfInflow">S$0</strong></div>
+          <div><span>Cash Outflow</span><strong id="cashOutflow">S$0</strong></div>
+          <div><span>CPF Outflow</span><strong id="cpfOutflow">S$0</strong></div>
+          <div><span>Savings & Investment</span><strong id="savingsInvestment">S$0</strong></div>
+        </div>
+      </section>
+
+      <section class="section-grid">
+        <div>
+          <p class="eyebrow">Section 5</p>
+          <h2>Annual Cashflow</h2>
+          <p class="section-copy">Current income, CPF, tax, expenses, insurance premium, mortgage, savings and investment commitments are summarized cleanly.</p>
+        </div>
+        <div class="cards-four">
+          <div class="metric-card"><span>Cash Inflow</span><strong data-mirror="cashInflow">S$0</strong></div>
+          <div class="metric-card"><span>Cash Outflow</span><strong data-mirror="cashOutflow">S$0</strong></div>
+          <div class="metric-card"><span>CPF Surplus</span><strong id="cpfSurplus">S$0</strong></div>
+          <div class="metric-card accent"><span>Annual Surplus</span><strong data-mirror="annualSurplus">S$0</strong></div>
+        </div>
+      </section>
+
+      <section id="insurance" class="section-grid">
+        <div>
+          <p class="eyebrow">Section 6</p>
+          <h2>Insurance Summary</h2>
+          <p class="section-copy">Coverage and premium are grouped by need, so shortfalls can feed into proposed implementation and surplus allocation.</p>
+        </div>
+        <div class="panel">
+          <table>
+            <thead>
+              <tr><th>Coverage</th><th>Current</th><th>Required</th><th>Gap</th><th>Annual Premium</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Death</td><td>S$600K</td><td>S$1.1M</td><td>S$500K</td><td>S$3,600</td></tr>
+              <tr><td>TPD</td><td>S$400K</td><td>S$950K</td><td>S$550K</td><td>S$2,400</td></tr>
+              <tr><td>Critical Illness</td><td>S$180K</td><td>S$450K</td><td>S$270K</td><td>S$2,900</td></tr>
+              <tr><td>Hospitalisation</td><td>Covered</td><td>As charged</td><td>Review</td><td>S$1,200</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="allocation" class="section-grid">
+        <div>
+          <p class="eyebrow">Section 7</p>
+          <h2>Current vs Proposed Allocation</h2>
+          <p class="section-copy">The consultant can adjust ROI assumptions, proposed savings, and asset buckets before showing the final recommendation.</p>
+        </div>
+        <div class="allocation-layout">
+          <div class="donut" aria-label="Current allocation chart"></div>
+          <div class="allocation-list">
+            <div><span>Living expenses</span><strong>42%</strong></div>
+            <div><span>Savings & investment</span><strong>28%</strong></div>
+            <div><span>Mortgage</span><strong>18%</strong></div>
+            <div><span>Insurance</span><strong>7%</strong></div>
+            <div><span>Tax</span><strong>5%</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="proposed-assets" class="data-section">
+        <div class="section-heading-row">
+          <div>
+            <p class="eyebrow">Section 8</p>
+            <h2>Proposed Assets Allocation</h2>
+            <p class="section-copy">Current allocation is pulled from Section 3 assets, excluding home/property. Proposed amount starts the same as current, ROI is editable, and return is calculated automatically.</p>
+          </div>
+          <div class="summary-stack">
+            <div><span>Total Proposed Assets</span><input class="summary-edit" id="summaryProposedAssetTotal" type="text" readonly value="S$0"></div>
+            <div><span>Total Return</span><input class="summary-edit" id="summaryProposedReturnTotal" type="text" value="S$0"></div>
+            <div class="accent"><span>Average Weighted Return</span><input class="summary-edit" id="summaryProposedAwr" type="text" value="0.00%"></div>
+          </div>
+        </div>
+        <div class="proposed-assets-layout">
+          <div class="panel proposed-assets-table-wrap">
+            <table class="proposed-assets-table">
+              <thead>
+                <tr>
+                  <th>Assets</th>
+                  <th>Current ($)</th>
+                  <th>Proposed ($)</th>
+                  <th>Assumed Annual ROI (%)</th>
+                  <th>Return ($)</th>
+                  <th>Allocation</th>
+                </tr>
+              </thead>
+              <tbody id="proposedAssetRows"></tbody>
+              <tfoot>
+                <tr>
+                  <th>Total Assets</th>
+                  <th id="proposedCurrentTotal">S$0</th>
+                  <th id="proposedAmountTotal">S$0</th>
+                  <th></th>
+                  <th id="proposedTableReturnTotal">S$0</th>
+                  <th id="proposedAllocationTotal">100%</th>
+                </tr>
+                <tr>
+                  <th colspan="3" class="awr-label">Average Weighted Returns (AWR)</th>
+                  <th id="proposedTableAwr">0.00%</th>
+                  <th colspan="2"></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="panel proposed-chart-panel">
+            <h3>Proposed Assets Allocation</h3>
+            <div class="proposed-donut" id="proposedAssetDonut" aria-label="Proposed assets allocation chart"></div>
+            <div class="proposed-legend" id="proposedAssetLegend"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="projection" class="projection-section">
+        <div class="section-heading-row">
+          <div>
+            <p class="eyebrow">Main Client Visual</p>
+            <h2>Financial Independence Projection</h2>
+            <p class="section-copy">A chart like your sample: assets grow each year from current holdings, annual surplus, and assumed ROI. Toggle before and after implementation to show the value of taking action.</p>
+          </div>
+          <div class="toggle" role="tablist" aria-label="Projection mode">
+            <button type="button" data-mode="before">Before</button>
+            <button type="button" data-mode="after" class="selected">After</button>
+            <button type="button" data-mode="compare">Compare</button>
+          </div>
+        </div>
+
+        <div class="chart-panel">
+          <div class="chart-title-row">
+            <div>
+              <h3 id="chartTitle">After Implementation Projection</h3>
+              <p>Assumes yearly contributions are made at the beginning of each period.</p>
+            </div>
+            <div class="legend" id="legend"></div>
+          </div>
+          <svg id="projectionChart" viewBox="0 0 920 440" role="img" aria-labelledby="chartTitle"></svg>
+        </div>
+
+        <div class="projection-summary">
+          <div>
+            <span>Projected assets at FI age 60</span>
+            <strong id="assetAtFi">S$1,795,000</strong>
+          </div>
+          <div>
+            <span>Annual recurrent income at 4%</span>
+            <strong id="annualIncome">S$71,800</strong>
+          </div>
+          <div>
+            <span>Monthly recurrent income</span>
+            <strong id="monthlyIncome">S$5,983</strong>
+          </div>
+          <div>
+            <span>Improvement vs before</span>
+            <strong id="improvement">+S$475,000</strong>
+          </div>
+        </div>
+      </section>
+
+      <section id="recommendations" class="section-grid">
+        <div>
+          <p class="eyebrow">Section 9</p>
+          <h2>Recommendations & Export</h2>
+          <p class="section-copy">The final view becomes a presentation-ready action list with person-in-charge, timeframe, and optional PDF export.</p>
+        </div>
+        <div class="panel recommendation-list">
+          <div><strong>Immediate</strong><span>Build emergency fund to 6 months of expenses.</span></div>
+          <div><strong>Immediate</strong><span>Close death, TPD, and CI protection gaps.</span></div>
+          <div><strong>12 months</strong><span>Redirect surplus into proposed asset allocation.</span></div>
+          <div><strong>Annual</strong><span>Review assumptions, portfolio value, and objective progress.</span></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
