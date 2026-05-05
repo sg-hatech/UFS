@@ -27,34 +27,35 @@ body {
 .app-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: 220px minmax(0, 1fr);
 }
 
 .sidebar {
   position: sticky;
   top: 0;
   height: 100vh;
-  padding: 26px 22px;
+  padding: 22px 16px;
   background: var(--nav);
   color: white;
 }
 
 .brand {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
-  margin-bottom: 36px;
+  margin-bottom: 24px;
 }
 
 .brand-mark {
   display: grid;
   place-items: center;
-  width: 46px;
-  height: 46px;
+  width: 38px;
+  height: 38px;
   border-radius: 8px;
   background: #ffffff;
   color: var(--nav);
   font-weight: 800;
+  font-size: 13px;
 }
 
 .brand span,
@@ -76,12 +77,12 @@ body {
 }
 
 .steps a {
-  padding: 11px 12px;
+  padding: 9px 10px;
   border-radius: 8px;
   color: #dbe7f6;
   text-decoration: none;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .steps a.active,
@@ -668,7 +669,7 @@ th {
 
 .proposed-assets-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.6fr);
+  grid-template-columns: 1fr;
   gap: 18px;
   align-items: start;
 }
@@ -683,7 +684,7 @@ th {
 
 .proposed-assets-table td,
 .proposed-assets-table th {
-  padding: 9px 8px;
+  padding: 7px 7px;
 }
 
 .proposed-assets-table tbody td:first-child {
@@ -699,7 +700,7 @@ th {
 
 .proposed-assets-table input {
   width: 110px;
-  padding: 8px 9px;
+  padding: 6px 8px;
   border: 1px solid #cfd8e5;
   border-radius: 6px;
   color: var(--ink);
@@ -738,8 +739,15 @@ th {
 
 .proposed-chart-panel {
   display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
   justify-items: center;
+  align-items: center;
   gap: 14px;
+}
+
+.proposed-chart-panel h3 {
+  grid-column: 1 / -1;
+  justify-self: start;
 }
 
 .proposed-donut {
@@ -947,9 +955,13 @@ th {
   .projection-summary,
   .input-two-col,
   .summary-stack,
-  .cashflow-breakdown,
-  .proposed-assets-layout {
+  .cashflow-breakdown {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .proposed-assets-layout,
+  .proposed-chart-panel {
+    grid-template-columns: 1fr;
   }
 }
 
