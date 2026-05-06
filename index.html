@@ -239,16 +239,19 @@
             <h3>Annual Outflows</h3>
             <div class="input-grid">
               <label>Income Tax <input type="number" min="0" step="1000" data-outflow="tax" value="16000"></label>
-              <label>Living / Family Expenses <input type="number" min="0" step="1000" data-outflow="living" value="72000"></label>
+              <label>Insurance Cash Value <input type="number" min="0" step="1000" data-outflow="insuranceCash" value="6000"></label>
+              <label>Endowment/Annuity <input type="number" min="0" step="1000" data-outflow="endowmentAnnuity" value="4000"></label>
+              <label>Cash Investment <input type="number" min="0" step="1000" data-outflow="cashInvestment" value="10000"></label>
+              <label>SRS <input type="number" min="0" step="1000" data-outflow="srsOutflow" value="0"></label>
+              <label>Others Investment <input type="number" min="0" step="1000" data-outflow="othersInvestment" value="14000"></label>
               <label>Home Expenses <input type="number" min="0" step="1000" data-outflow="home" value="12000"></label>
-              <label>Mortgage Payments - Cash <input type="number" min="0" step="1000" data-outflow="mortgageCash" value="18000"></label>
-              <label>Mortgage Payments - CPF <input type="number" min="0" step="1000" data-outflow="mortgageCpf" value="24000"></label>
-              <label>Insurance Premium - Cash <input type="number" min="0" step="1000" data-outflow="insuranceCash" value="10100"></label>
-              <label>Insurance Premium - CPF <input type="number" min="0" step="1000" data-outflow="insuranceCpf" value="1800"></label>
-              <label>Cash Investment <input type="number" min="0" step="1000" data-outflow="cashInvestment" value="24000"></label>
-              <label>CPF Investment <input type="number" min="0" step="1000" data-outflow="cpfInvestment" value="6000"></label>
-              <label>Transportation <input type="number" min="0" step="1000" data-outflow="transport" value="9600"></label>
-              <label>Other Expenses <input type="number" min="0" step="1000" data-outflow="others" value="6000"></label>
+              <label>Mortgage Payment <input type="number" min="0" step="1000" data-outflow="mortgageCash" value="18000"></label>
+              <label>Personal/Family/Transport Expenses <input type="number" min="0" step="1000" data-outflow="living" value="81600"></label>
+              <label>Insurance (No Cash Value) <input type="number" min="0" step="1000" data-outflow="insuranceNoCashValue" value="4100"></label>
+              <label>Other <input type="number" min="0" step="1000" data-outflow="others" value="6000"></label>
+              <label>Mortgage Payment - CPF <input type="number" min="0" step="1000" data-outflow="mortgageCpf" value="24000"></label>
+              <label>Investment - CPF <input type="number" min="0" step="1000" data-outflow="cpfInvestment" value="6000"></label>
+              <label>Insurance - CPF <input type="number" min="0" step="1000" data-outflow="insuranceCpf" value="1800"></label>
             </div>
           </div>
         </div>
@@ -262,36 +265,23 @@
         </div>
       </section>
 
-      <section class="section-grid">
-        <div>
-          <p class="eyebrow">Section 5</p>
-          <h2>Annual Cashflow</h2>
-          <p class="section-copy">Current income, CPF, tax, expenses, insurance premium, mortgage, savings and investment commitments are summarized cleanly.</p>
-        </div>
-        <div class="cards-four">
-          <div class="metric-card"><span>Cash Inflow</span><strong data-mirror="cashInflow">S$0</strong></div>
-          <div class="metric-card"><span>Cash Outflow</span><strong data-mirror="cashOutflow">S$0</strong></div>
-          <div class="metric-card"><span>CPF Surplus</span><strong id="cpfSurplus">S$0</strong></div>
-          <div class="metric-card accent"><span>Annual Surplus</span><strong data-mirror="annualSurplus">S$0</strong></div>
-        </div>
-      </section>
-
       <section id="insurance" class="section-grid">
         <div>
-          <p class="eyebrow">Section 6</p>
+          <p class="eyebrow">Section 5</p>
           <h2>Insurance Summary</h2>
-          <p class="section-copy">Coverage and premium are grouped by need, so shortfalls can feed into proposed implementation and surplus allocation.</p>
         </div>
-        <div class="panel">
-          <table>
+        <div class="panel insurance-panel">
+          <label class="single-input">Desired Annual Recurrent Income <input type="number" min="0" step="1000" id="desiredAnnualIncome" value="0"></label>
+          <table class="insurance-table">
             <thead>
-              <tr><th>Coverage</th><th>Current</th><th>Required</th><th>Gap</th><th>Annual Premium</th></tr>
+              <tr><th>Coverage</th><th>Coverage Need</th><th>Current Coverage</th><th>Current Assets</th><th>Shortfall/Surplus</th></tr>
             </thead>
             <tbody>
-              <tr><td>Death</td><td>S$600K</td><td>S$1.1M</td><td>S$500K</td><td>S$3,600</td></tr>
-              <tr><td>TPD</td><td>S$400K</td><td>S$950K</td><td>S$550K</td><td>S$2,400</td></tr>
-              <tr><td>Critical Illness</td><td>S$180K</td><td>S$450K</td><td>S$270K</td><td>S$2,900</td></tr>
-              <tr><td>Hospitalisation</td><td>Covered</td><td>As charged</td><td>Review</td><td>S$1,200</td></tr>
+              <tr data-insurance-row="death"><td>Death</td><td data-insurance-need="death">S$0</td><td><input type="number" min="0" step="1000" data-insurance-current="death" readonly value="600000"></td><td><input type="number" min="0" step="1000" data-insurance-assets="death" value="0"></td><td data-insurance-gap="death">S$0</td></tr>
+              <tr data-insurance-row="tpd"><td>TPD</td><td data-insurance-need="tpd">S$0</td><td><input type="number" min="0" step="1000" data-insurance-current="tpd" readonly value="400000"></td><td><input type="number" min="0" step="1000" data-insurance-assets="tpd" value="0"></td><td data-insurance-gap="tpd">S$0</td></tr>
+              <tr data-insurance-row="ci"><td>Critical Illness</td><td data-insurance-need="ci">S$0</td><td><input type="number" min="0" step="1000" data-insurance-current="ci" readonly value="180000"></td><td><input type="number" min="0" step="1000" data-insurance-assets="ci" value="0"></td><td data-insurance-gap="ci">S$0</td></tr>
+              <tr data-insurance-row="hospital"><td>Hospitalisation</td><td>As charged</td><td><select data-insurance-current="hospital"><option selected>Yes</option><option>No</option></select></td><td>-</td><td data-insurance-gap="hospital">Covered</td></tr>
+              <tr data-insurance-row="longTermCare"><td>Long Term Care</td><td data-insurance-need="longTermCare">Yes</td><td><select data-insurance-current="longTermCare"><option selected>No</option><option>Yes</option><option>NA</option></select></td><td>-</td><td data-insurance-gap="longTermCare">Shortfall</td></tr>
             </tbody>
           </table>
         </div>
@@ -299,18 +289,17 @@
 
       <section id="allocation" class="section-grid">
         <div>
-          <p class="eyebrow">Section 7</p>
-          <h2>Current vs Proposed Allocation</h2>
-          <p class="section-copy">The consultant can adjust ROI assumptions, proposed savings, and asset buckets before showing the final recommendation.</p>
+          <p class="eyebrow">Section 6</p>
+          <h2>Income Allocation</h2>
         </div>
         <div class="allocation-layout">
-          <div class="donut" aria-label="Current allocation chart"></div>
+          <div class="donut" id="incomeAllocationDonut" aria-label="Income allocation chart"></div>
           <div class="allocation-list">
-            <div><span>Living expenses</span><strong>42%</strong></div>
-            <div><span>Savings & investment</span><strong>28%</strong></div>
-            <div><span>Mortgage</span><strong>18%</strong></div>
-            <div><span>Insurance</span><strong>7%</strong></div>
-            <div><span>Tax</span><strong>5%</strong></div>
+            <div><span>Tax</span><b id="incomeTaxAmount">S$0</b><strong id="incomeTaxAllocation">0%</strong></div>
+            <div><span>Savings & Investments</span><b id="incomeSavingsAmount">S$0</b><strong id="incomeSavingsAllocation">0%</strong></div>
+            <div><span>Mortgage Repayment</span><b id="incomeMortgageAmount">S$0</b><strong id="incomeMortgageAllocation">0%</strong></div>
+            <div><span>Living Expenses</span><b id="incomeLivingAmount">S$0</b><strong id="incomeLivingAllocation">0%</strong></div>
+            <div class="allocation-total"><span>Total</span><b id="incomeTotalAmount">S$0</b><strong>100%</strong></div>
           </div>
         </div>
       </section>
@@ -318,7 +307,7 @@
       <section id="proposed-assets" class="data-section">
         <div class="section-heading-row">
           <div>
-            <p class="eyebrow">Section 8</p>
+            <p class="eyebrow">Section 7</p>
             <h2>Proposed Assets Allocation</h2>
             <p class="section-copy">Current allocation is pulled from Section 3 assets, excluding home/property. Proposed amount starts the same as current, ROI is editable, and return is calculated automatically.</p>
           </div>
@@ -354,7 +343,7 @@
                 <tr>
                   <th colspan="3" class="awr-label">Average Weighted Returns (AWR)</th>
                   <th id="proposedTableAwr">0.00%</th>
-                  <th colspan="2"></th>
+                  <th colspan="2" class="awr-empty"></th>
                 </tr>
               </tfoot>
             </table>
@@ -414,7 +403,7 @@
 
       <section id="recommendations" class="section-grid">
         <div>
-          <p class="eyebrow">Section 9</p>
+          <p class="eyebrow">Section 8</p>
           <h2>Recommendations & Export</h2>
           <p class="section-copy">The final view becomes a presentation-ready action list with person-in-charge, timeframe, and optional PDF export.</p>
         </div>

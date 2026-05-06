@@ -1,16 +1,16 @@
 const colors = {
-  cash: "#0b8f46",
-  cpf: "#1764d4",
-  srs: "#5e2ea6",
-  property: "#b17a00",
-  total: "#047c83",
-  before: "#c24136",
-  objectiveBlue: "#1764d4",
-  objectiveBlueDark: "#0b3f91",
-  objectiveGreen: "#0b8f46",
-  objectiveGreenDark: "#075f31",
-  objectiveYellow: "#d8a100",
-  objectiveYellowDark: "#8a6200"
+  cash: "#2f7d6d",
+  cpf: "#b58b36",
+  srs: "#7e4261",
+  property: "#8b6a2e",
+  total: "#2d7f83",
+  before: "#9f2f24",
+  objectiveBlue: "#2f6797",
+  objectiveBlueDark: "#204b70",
+  objectiveGreen: "#2f7d6d",
+  objectiveGreenDark: "#1f584d",
+  objectiveYellow: "#b58b36",
+  objectiveYellowDark: "#7b5a20"
 };
 
 const years = [0, 2, 4, 6, 8, 10, 12, 14];
@@ -36,21 +36,21 @@ const cpfAllocationRates = [
 let currentMode = "after";
 let proposedSummarySeeded = false;
 const proposedAssetDefinitions = [
-  { key: "investmentProperty", label: "Investment Properties", source: null, roi: 0, color: "#4f86d9" },
-  { key: "shares", label: "Shares / Unit Trusts", source: "shares", roi: 3, color: "#6a4fb0" },
-  { key: "uaf", label: "Unicorn Advised Fund", source: "uaf", roi: 5, color: "#7e5ab6" },
-  { key: "bank", label: "Bank Deposits", source: "cash", roi: 1, color: "#3fa9b8" },
-  { key: "cpfOa", label: "CPF OA", source: "cpfOa", roi: 2.5, color: "#3b76d1" },
-  { key: "cpfSa", label: "CPF SA", source: "cpfSa", roi: 4, color: "#7d9dea" },
-  { key: "cpfMa", label: "CPF MA", source: "cpfMa", roi: 4, color: "#e76f7a" },
-  { key: "cpfRa", label: "CPF RA", source: null, roi: 4, color: "#be5b95" },
-  { key: "cashValue", label: "Cash Value in Life Insurance", source: "annuity", roi: 1.5, color: "#67c6d0" },
-  { key: "bonds", label: "Bonds", source: "bond", roi: 2.5, color: "#c3a13b" },
-  { key: "business", label: "Business", source: null, roi: 0, color: "#8b6f47" },
-  { key: "srs", label: "SRS Account", source: "srs", roi: 4, color: "#9047a8" },
-  { key: "pension", label: "Pension Fund", source: null, roi: 0, color: "#708090" },
-  { key: "alternative", label: "Alternative Investments", source: null, roi: 0, color: "#0f766e" },
-  { key: "others", label: "Others", source: "others", roi: 0, color: "#94a3b8" }
+  { key: "investmentProperty", label: "Investment Properties", source: null, roi: 0, color: "#b58b36" },
+  { key: "shares", label: "Shares / Unit Trusts", source: "shares", roi: 3, color: "#7e4261" },
+  { key: "uaf", label: "Unicorn Advised Fund", source: "uaf", roi: 5, color: "#2f7d6d" },
+  { key: "bank", label: "Bank Deposits", source: "cash", roi: 1, color: "#d7a84d" },
+  { key: "cpfOa", label: "CPF OA", source: "cpfOa", roi: 2.5, color: "#2f6797" },
+  { key: "cpfSa", label: "CPF SA", source: "cpfSa", roi: 4, color: "#5d7f95" },
+  { key: "cpfMa", label: "CPF MA", source: "cpfMa", roi: 4, color: "#9f2f24" },
+  { key: "cpfRa", label: "CPF RA", source: null, roi: 4, color: "#8b6a2e" },
+  { key: "cashValue", label: "Cash Value in Life Insurance", source: "annuity", roi: 1.5, color: "#6aa9a1" },
+  { key: "bonds", label: "Bonds", source: "bond", roi: 2.5, color: "#c7a34d" },
+  { key: "business", label: "Business", source: null, roi: 0, color: "#6f5439" },
+  { key: "srs", label: "SRS Account", source: "srs", roi: 4, color: "#7b2d27" },
+  { key: "pension", label: "Pension Fund", source: null, roi: 0, color: "#8a8175" },
+  { key: "alternative", label: "Alternative Investments", source: null, roi: 0, color: "#1f6f64" },
+  { key: "others", label: "Others", source: "others", roi: 0, color: "#a89984" }
 ];
 
 const svg = document.getElementById("projectionChart");
@@ -295,7 +295,7 @@ function updateProposedAssetAllocation() {
       cursor += item.proposed / proposedTotal * 100;
       return `${item.color} ${start.toFixed(2)}% ${cursor.toFixed(2)}%`;
     });
-  donut.style.background = gradientParts.length ? `conic-gradient(${gradientParts.join(", ")})` : "#edf2f7";
+  donut.style.background = gradientParts.length ? `conic-gradient(${gradientParts.join(", ")})` : "#efe6d5";
 
   legend.replaceChildren();
   chartItems
@@ -394,10 +394,17 @@ function collectPlanningValues() {
   const totalInflow = sumInputs("[data-inflow]");
 
   const cpfOutflow = inputValue('[data-outflow="mortgageCpf"]') + inputValue('[data-outflow="insuranceCpf"]') + inputValue('[data-outflow="cpfInvestment"]');
-  const savingsInvestment = inputValue('[data-outflow="cashInvestment"]') + inputValue('[data-outflow="cpfInvestment"]') + inputValue('[data-inflow="srs"]');
   const totalOutflow = sumInputs("[data-outflow]");
-  const cashOutflow = totalOutflow - cpfOutflow;
   const annualSurplus = totalInflow - totalOutflow;
+  const savingsInvestment =
+    annualSurplus +
+    inputValue('[data-outflow="insuranceCash"]') +
+    inputValue('[data-outflow="endowmentAnnuity"]') +
+    inputValue('[data-outflow="srsOutflow"]') +
+    inputValue('[data-outflow="othersInvestment"]') +
+    inputValue('[data-outflow="cpfInvestment"]') +
+    inputValue('[data-outflow="cashInvestment"]');
+  const cashOutflow = totalOutflow - cpfOutflow;
   const cpfSurplus = cpfInflow - cpfOutflow;
 
   const homeMortgage = inputValue('[data-liability="homeMortgage"]') + inputValue('[data-liability="investmentMortgage"]');
@@ -504,6 +511,8 @@ function updatePlanningTotals() {
   const values = collectPlanningValues();
   updateObjectiveVisuals();
   updateProposedAssetAllocation();
+  updateIncomeAllocation(values);
+  updateInsuranceNeeds(values);
   setText("totalAssets", values.totalAssets);
   setText("totalLiabilities", values.totalLiabilities);
   setText("netWorth", values.netWorth);
@@ -516,6 +525,108 @@ function updatePlanningTotals() {
   setText("cpfOutflow", values.cpfOutflow);
   setText("savingsInvestment", values.savingsInvestment);
   setText("cpfSurplus", values.cpfSurplus);
+}
+
+function updateInsuranceNeeds(values) {
+  const desiredInput = document.getElementById("desiredAnnualIncome");
+  const tax = inputValue('[data-outflow="tax"]');
+  const mortgage = inputValue('[data-outflow="mortgageCash"]') + inputValue('[data-outflow="mortgageCpf"]');
+  const livingFromIncome = Math.max(0, values.totalInflow - tax - values.savingsInvestment - mortgage);
+  if (desiredInput && desiredInput.dataset.touched !== "true") desiredInput.value = Math.round(livingFromIncome);
+  const desiredIncome = Number(desiredInput?.value || 0);
+  const currentAssets = Math.max(0, values.netWorth);
+  const rows = {
+    death: desiredIncome / 0.04 + 30000,
+    tpd: desiredIncome / 0.04 + 50000,
+    ci: desiredIncome / 0.04 + 100000
+  };
+
+  Object.entries(rows).forEach(([key, needs]) => {
+    const currentCoverage = Number(document.querySelector(`[data-insurance-current="${key}"]`)?.value || 0);
+    const assetsInput = document.querySelector(`[data-insurance-assets="${key}"]`);
+    const defaultAssets = key === "death"
+      ? Math.max(0, values.totalAssets - inputValue('[data-asset="property"]') + inputValue('[data-liability="homeMortgage"]'))
+      : inputValue('[data-asset="cash"]') + inputValue('[data-asset="shares"]');
+    if (assetsInput && assetsInput.dataset.touched !== "true") assetsInput.value = Math.round(defaultAssets);
+    const rowAssets = Number(assetsInput?.value || 0);
+    const surplus = currentCoverage + rowAssets - needs;
+    const needsCell = document.querySelector(`[data-insurance-need="${key}"]`);
+    const gapCell = document.querySelector(`[data-insurance-gap="${key}"]`);
+    if (needsCell) needsCell.textContent = formatCurrency(needs);
+    if (gapCell) {
+      gapCell.textContent = formatCurrency(surplus);
+      gapCell.classList.toggle("surplus-positive", surplus >= 0);
+      gapCell.classList.toggle("surplus-negative", surplus < 0);
+    }
+  });
+
+  const ltcCurrent = document.querySelector('[data-insurance-current="longTermCare"]')?.value || "No";
+  const ltcGap = document.querySelector('[data-insurance-gap="longTermCare"]');
+  if (ltcGap) {
+    if (ltcCurrent === "Yes") {
+      ltcGap.textContent = "Covered";
+      ltcGap.classList.add("surplus-positive");
+      ltcGap.classList.remove("surplus-negative");
+    } else if (ltcCurrent === "NA") {
+      ltcGap.textContent = "NA";
+      ltcGap.classList.add("surplus-positive");
+      ltcGap.classList.remove("surplus-negative");
+    } else {
+      ltcGap.textContent = "Shortfall";
+      ltcGap.classList.add("surplus-negative");
+      ltcGap.classList.remove("surplus-positive");
+    }
+  }
+
+  const hospitalCurrent = document.querySelector('[data-insurance-current="hospital"]')?.value || "Yes";
+  const hospitalGap = document.querySelector('[data-insurance-gap="hospital"]');
+  if (hospitalGap) {
+    hospitalGap.textContent = hospitalCurrent === "Yes" ? "Covered" : "Shortfall";
+    hospitalGap.classList.toggle("surplus-positive", hospitalCurrent === "Yes");
+    hospitalGap.classList.toggle("surplus-negative", hospitalCurrent !== "Yes");
+  }
+}
+
+function setPercent(id, value) {
+  const element = document.getElementById(id);
+  if (element) element.textContent = `${value.toFixed(1)}%`;
+}
+
+function setCurrencyText(id, value) {
+  const element = document.getElementById(id);
+  if (element) element.textContent = formatCurrency(value);
+}
+
+function updateIncomeAllocation(values) {
+  const tax = inputValue('[data-outflow="tax"]');
+  const mortgage = inputValue('[data-outflow="mortgageCash"]') + inputValue('[data-outflow="mortgageCpf"]');
+  const savings = values.savingsInvestment;
+  const totalInflow = values.totalInflow;
+  const living = Math.max(0, totalInflow - tax - savings - mortgage);
+  const allocationTotal = tax + savings + mortgage + living;
+  const denominator = allocationTotal || 1;
+  const taxPct = tax / denominator * 100;
+  const savingsPct = savings / denominator * 100;
+  const mortgagePct = mortgage / denominator * 100;
+  const livingPct = living / denominator * 100;
+
+  setPercent("incomeTaxAllocation", taxPct);
+  setPercent("incomeSavingsAllocation", savingsPct);
+  setPercent("incomeMortgageAllocation", mortgagePct);
+  setPercent("incomeLivingAllocation", livingPct);
+  setCurrencyText("incomeTaxAmount", tax);
+  setCurrencyText("incomeSavingsAmount", savings);
+  setCurrencyText("incomeMortgageAmount", mortgage);
+  setCurrencyText("incomeLivingAmount", living);
+  setCurrencyText("incomeTotalAmount", allocationTotal);
+
+  const donut = document.getElementById("incomeAllocationDonut");
+  if (donut) {
+    const taxEnd = taxPct;
+    const savingsEnd = taxEnd + savingsPct;
+    const mortgageEnd = savingsEnd + mortgagePct;
+    donut.style.background = `conic-gradient(var(--green) 0 ${taxEnd}%, var(--blue) ${taxEnd}% ${savingsEnd}%, var(--violet) ${savingsEnd}% ${mortgageEnd}%, var(--gold) ${mortgageEnd}% 100%)`;
+  }
 }
 
 function create(tag, attrs = {}, text = "") {
@@ -620,6 +731,22 @@ document.querySelectorAll(".toggle button").forEach((button) => {
 
 document.querySelectorAll("input[type='number']").forEach((input) => {
   input.addEventListener("input", () => draw(currentMode));
+});
+
+document.getElementById("desiredAnnualIncome")?.addEventListener("input", (event) => {
+  event.target.dataset.touched = "true";
+  draw(currentMode);
+});
+
+document.querySelectorAll("[data-insurance-assets]").forEach((input) => {
+  input.addEventListener("input", (event) => {
+    event.target.dataset.touched = "true";
+    draw(currentMode);
+  });
+});
+
+document.querySelectorAll("select[data-insurance-current]").forEach((input) => {
+  input.addEventListener("change", () => draw(currentMode));
 });
 
 document.querySelectorAll("[data-profile]").forEach((input) => {
