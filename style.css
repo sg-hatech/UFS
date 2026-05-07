@@ -244,6 +244,9 @@ h3 {
 
 .section-copy {
   line-height: 1.55;
+  font-family: "Segoe Print", "Comic Sans MS", "Bradley Hand ITC", cursive;
+  font-style: normal;
+  font-size: 15px;
 }
 
 .panel,
@@ -664,6 +667,11 @@ th {
   text-align: right;
 }
 
+.insurance-table th,
+.insurance-table td {
+  font-weight: 800;
+}
+
 .insurance-table input[readonly] {
   border-color: #e1d4b9;
   background: #f7edd7;
@@ -778,6 +786,117 @@ th {
   grid-template-columns: 1fr;
   gap: 18px;
   align-items: start;
+}
+
+.quote-copy {
+  max-width: 860px;
+  margin: 0 auto;
+  color: #5a170f;
+  text-align: center;
+  font-family: "Segoe Print", "Comic Sans MS", "Bradley Hand ITC", cursive;
+  font-size: 17px;
+  font-style: normal;
+  line-height: 1.45;
+}
+
+.savings-allocation-panel {
+  display: grid;
+  gap: 24px;
+}
+
+.savings-allocation-table th,
+.savings-allocation-table td {
+  padding: 8px 10px;
+  font-weight: 800;
+}
+
+.savings-allocation-table thead tr:first-child th {
+  background: #e5dcce;
+  color: #3a2a1d;
+  text-align: center;
+  font-weight: 800;
+}
+
+.savings-allocation-table thead tr:nth-child(2) th {
+  background: var(--panel);
+  color: #3a2a1d;
+  text-align: center;
+  font-weight: 800;
+}
+
+.savings-allocation-table tbody td:first-child,
+.savings-allocation-table tfoot th:first-child {
+  text-align: left;
+}
+
+.savings-allocation-table tbody td:not(:first-child),
+.savings-allocation-table tfoot th:not(:first-child) {
+  text-align: center;
+}
+
+.savings-allocation-table tbody td:nth-child(4),
+.savings-allocation-table tbody td:nth-child(5),
+.savings-allocation-table tfoot th:nth-child(4),
+.savings-allocation-table tfoot th:nth-child(5) {
+  background: #e9e0dd;
+}
+
+.savings-allocation-table input {
+  width: 110px;
+  padding: 5px 8px;
+  border: 1px solid #d9caae;
+  border-radius: 6px;
+  background: #fff8df;
+  color: var(--ink);
+  text-align: center;
+  font: inherit;
+  font-weight: 700;
+}
+
+.savings-allocation-table tfoot th {
+  font-weight: 800;
+}
+
+.savings-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px;
+  align-items: center;
+}
+
+.savings-chart-card {
+  display: grid;
+  grid-template-columns: 150px minmax(180px, 1fr);
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+}
+
+.savings-donut {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #efe6d5;
+}
+
+.savings-legend {
+  display: grid;
+  gap: 7px;
+  font-size: 12px;
+}
+
+.savings-legend div {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #4e4033;
+}
+
+.savings-legend i {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
 }
 
 .proposed-assets-table-wrap {
@@ -1043,10 +1162,19 @@ th {
   ry: 6;
 }
 
+.value-pill.compact rect {
+  opacity: 0.82;
+}
+
 .value-pill text {
   fill: white;
   font-weight: 800;
   font-size: 13px;
+}
+
+.value-pill.compact text {
+  font-size: 11px;
+  opacity: 0.9;
 }
 
 .fi-line {
@@ -1054,8 +1182,12 @@ th {
   stroke-dasharray: 5 7;
 }
 
+.fi-age-label {
+  font-weight: 800;
+}
+
 .projection-summary {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   margin-top: 14px;
 }
 
@@ -1110,7 +1242,9 @@ th {
   }
 
   .proposed-assets-layout,
-  .proposed-chart-panel {
+  .proposed-chart-panel,
+  .savings-chart-grid,
+  .savings-chart-card {
     grid-template-columns: 1fr;
   }
 }
@@ -1140,7 +1274,9 @@ th {
   .input-grid,
   .summary-stack,
   .cashflow-breakdown,
-  .proposed-assets-layout {
+  .proposed-assets-layout,
+  .savings-chart-grid,
+  .savings-chart-card {
     grid-template-columns: 1fr;
   }
 

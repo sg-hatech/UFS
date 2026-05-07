@@ -13,7 +13,7 @@ const colors = {
   objectiveYellowDark: "#7b5a20"
 };
 
-const years = [0, 2, 4, 6, 8, 10, 12, 14];
+let years = [0, 2, 4, 6, 8, 10, 12, 14];
 const cpfOrdinaryWageCeiling = 8000 * 12;
 const cpfAnnualSalaryCeiling = 102000;
 const cpfContributionRates = [
@@ -35,6 +35,20 @@ const cpfAllocationRates = [
 ];
 let currentMode = "after";
 let proposedSummarySeeded = false;
+const savingsAllocationDefinitions = [
+  { key: "lifeInsurance", label: "Life Insurance", source: "insuranceCash", color: "#a20d4e" },
+  { key: "cashInvestment", label: "Cash Investment", source: "cashInvestment", color: "#a5262b" },
+  { key: "endowment", label: "Endowment / Annuity", source: "endowmentAnnuity", color: "#b58b36" },
+  { key: "bankSavings", label: "Bank Savings", source: null, color: "#2f7d6d" },
+  { key: "srsAccount", label: "SRS Account", source: "srsOutflow", color: "#7e4261" },
+  { key: "srsInvestment", label: "SRS Investment", source: null, color: "#8b6a2e" },
+  { key: "investmentProperty", label: "Investment Property", source: null, color: "#2f6797" },
+  { key: "others", label: "Other Investment", source: "othersInvestment", color: "#a89984" },
+  { key: "cpfInsurance", label: "CPF Insurance", source: null, color: "#6aa9a1" },
+  { key: "cpfInvestment", label: "CPF Investment", source: "cpfInvestment", color: "#d7a84d" },
+  { key: "cashSurplus", label: "Cash Surplus", source: "__cashSurplus", color: "#a20d4e" },
+  { key: "cpfSurplus", label: "CPF Surplus/Shortfall", source: "__cpfSurplus", color: "#ead9a3" }
+];
 const proposedAssetDefinitions = [
   { key: "investmentProperty", label: "Investment Properties", source: null, roi: 0, color: "#b58b36" },
   { key: "shares", label: "Shares / Unit Trusts", source: "shares", roi: 3, color: "#7e4261" },
@@ -47,7 +61,7 @@ const proposedAssetDefinitions = [
   { key: "cashValue", label: "Cash Value in Life Insurance", source: "annuity", roi: 1.5, color: "#6aa9a1" },
   { key: "bonds", label: "Bonds", source: "bond", roi: 2.5, color: "#c7a34d" },
   { key: "business", label: "Business", source: null, roi: 0, color: "#6f5439" },
-  { key: "srs", label: "SRS Account", source: "srs", roi: 4, color: "#7b2d27" },
+  { key: "srs", label: "SRS Account", source: "srs", roi: 0, color: "#7b2d27" },
   { key: "pension", label: "Pension Fund", source: null, roi: 0, color: "#8a8175" },
   { key: "alternative", label: "Alternative Investments", source: null, roi: 0, color: "#1f6f64" },
   { key: "others", label: "Others", source: "others", roi: 0, color: "#a89984" }
@@ -56,7 +70,8 @@ const proposedAssetDefinitions = [
 const svg = document.getElementById("projectionChart");
 const legend = document.getElementById("legend");
 const chartTitle = document.getElementById("chartTitle");
-const assetAtFi = document.getElementById("assetAtFi");
+const beforeAssetAtFi = document.getElementById("beforeAssetAtFi");
+const afterAssetAtFi = document.getElementById("afterAssetAtFi");
 const annualIncome = document.getElementById("annualIncome");
 const monthlyIncome = document.getElementById("monthlyIncome");
 const improvement = document.getElementById("improvement");
@@ -70,6 +85,26 @@ function sumInputs(selector) {
   return [...document.querySelectorAll(selector)].reduce((total, input) => total + Number(input.value || 0), 0);
 }
 
+function parseCurrencyValue(value) {
+  const parsed = Number(String(value || "").replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function parsePercentValue(value) {
+  const parsed = Number(String(value || "").replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(parsed) ? parsed / 100 : 0;
+}
+
+function getFinancialIndependenceYears() {
+  const rows = [...document.querySelectorAll(".objective-table tbody tr")];
+  const fiRow = rows.find((row) => {
+    const objective = row.querySelector("[data-objective-name]")?.value || "";
+    return objective.toLowerCase().includes("financial independence");
+  }) || rows[0];
+  const targetYears = Number(fiRow?.querySelector("[data-objective-years]")?.value || 0);
+  return Math.max(0, Math.round(targetYears || 0));
+}
+
 function formatCurrency(value) {
   const sign = value < 0 ? "-" : "";
   return `${sign}S$${Math.abs(Math.round(value)).toLocaleString("en-SG")}`;
@@ -78,6 +113,19 @@ function formatCurrency(value) {
 function moneyLabel(value) {
   if (value >= 1000000) return `S$${(value / 1000000).toFixed(value % 1000000 === 0 ? 0 : 1)}M`;
   return `S$${Math.round(value / 1000)}K`;
+}
+
+function projectionAmount(value) {
+  const sign = value < 0 ? "-" : "";
+  return `${sign}${Math.abs(value).toLocaleString("en-SG", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function projectionShortAmount(value) {
+  const sign = value < 0 ? "-" : "";
+  const amount = Math.abs(value);
+  if (amount >= 1000000) return `${sign}${(amount / 1000000).toFixed(2)}M`;
+  if (amount >= 1000) return `${sign}${(amount / 1000).toFixed(2)}K`;
+  return `${sign}${amount.toFixed(2)}`;
 }
 
 function setText(id, value) {
@@ -231,6 +279,99 @@ function setupProposedAssetRows() {
   });
 }
 
+function savingsCurrentAmount(item, values) {
+  if (item.source === "__cashSurplus") return Math.max(0, values.cashInflow - values.cashOutflow);
+  if (item.source === "__cpfSurplus") return values.cpfSurplus;
+  if (!item.source) return 0;
+  return inputValue(`[data-outflow="${item.source}"]`);
+}
+
+function setupSavingsAllocationRows() {
+  const tbody = document.getElementById("savingsAllocationRows");
+  if (!tbody || tbody.children.length) return;
+
+  savingsAllocationDefinitions.forEach((item) => {
+    const row = document.createElement("tr");
+    row.dataset.savingsRow = item.key;
+    row.innerHTML = `
+      <td>${item.label}</td>
+      <td data-savings-current="${item.key}">-</td>
+      <td data-savings-current-pct="${item.key}">-</td>
+      <td><input type="number" min="0" step="1000" data-savings-proposed="${item.key}" value="0"></td>
+      <td data-savings-proposed-pct="${item.key}">-</td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  tbody.querySelectorAll("[data-savings-proposed]").forEach((input) => {
+    input.addEventListener("input", () => {
+      input.dataset.touched = "true";
+      draw(currentMode);
+    });
+  });
+}
+
+function renderSavingsDonut(donutId, legendId, items, total) {
+  const donut = document.getElementById(donutId);
+  const legend = document.getElementById(legendId);
+  if (!donut || !legend) return;
+  const positive = items.filter((item) => item.amount > 0);
+  let cursor = 0;
+  const parts = positive.map((item) => {
+    const start = cursor;
+    cursor += item.amount / total * 100;
+    return `${item.color} ${start.toFixed(2)}% ${cursor.toFixed(2)}%`;
+  });
+  donut.style.background = parts.length ? `conic-gradient(${parts.join(", ")})` : "#efe6d5";
+  legend.replaceChildren();
+  positive.forEach((item) => {
+    const entry = document.createElement("div");
+    entry.innerHTML = `<i style="background:${item.color}"></i><span>${(item.amount / total * 100).toFixed(1)}% &nbsp; ${item.label}</span>`;
+    legend.appendChild(entry);
+  });
+}
+
+function updateSavingsAllocation(values) {
+  setupSavingsAllocationRows();
+  const currentItems = [];
+  const proposedItems = [];
+
+  savingsAllocationDefinitions.forEach((item) => {
+    const current = savingsCurrentAmount(item, values);
+    const proposedInput = document.querySelector(`[data-savings-proposed="${item.key}"]`);
+    if (proposedInput && proposedInput.dataset.touched !== "true") proposedInput.value = Math.max(0, Math.round(current));
+    const proposed = Number(proposedInput?.value || 0);
+    currentItems.push({ ...item, amount: Math.max(0, current) });
+    proposedItems.push({ ...item, amount: proposed });
+  });
+
+  const currentTotal = currentItems.reduce((sum, item) => sum + item.amount, 0);
+  const proposedTotal = proposedItems.reduce((sum, item) => sum + item.amount, 0);
+
+  savingsAllocationDefinitions.forEach((item) => {
+    const current = currentItems.find((entry) => entry.key === item.key)?.amount || 0;
+    const proposed = proposedItems.find((entry) => entry.key === item.key)?.amount || 0;
+    const currentCell = document.querySelector(`[data-savings-current="${item.key}"]`);
+    const currentPctCell = document.querySelector(`[data-savings-current-pct="${item.key}"]`);
+    const proposedPctCell = document.querySelector(`[data-savings-proposed-pct="${item.key}"]`);
+    if (currentCell) currentCell.textContent = current ? Math.round(current).toLocaleString("en-SG") : "-";
+    if (currentPctCell) currentPctCell.textContent = current && currentTotal ? (current / currentTotal * 100).toFixed(1) : "-";
+    if (proposedPctCell) proposedPctCell.textContent = proposed && proposedTotal ? (proposed / proposedTotal * 100).toFixed(1) : "-";
+  });
+
+  const currentTotalEl = document.getElementById("savingsCurrentTotal");
+  const proposedTotalEl = document.getElementById("savingsProposedTotal");
+  const currentPctTotalEl = document.getElementById("savingsCurrentAllocationTotal");
+  const proposedPctTotalEl = document.getElementById("savingsProposedAllocationTotal");
+  if (currentTotalEl) currentTotalEl.textContent = currentTotal ? Math.round(currentTotal).toLocaleString("en-SG") : "-";
+  if (proposedTotalEl) proposedTotalEl.textContent = proposedTotal ? Math.round(proposedTotal).toLocaleString("en-SG") : "-";
+  if (currentPctTotalEl) currentPctTotalEl.textContent = currentTotal ? "100.0" : "-";
+  if (proposedPctTotalEl) proposedPctTotalEl.textContent = proposedTotal ? "100.0" : "-";
+
+  renderSavingsDonut("savingsCurrentDonut", "savingsCurrentLegend", currentItems, currentTotal || 1);
+  renderSavingsDonut("savingsProposedDonut", "savingsProposedLegend", proposedItems, proposedTotal || 1);
+}
+
 function updateProposedAssetAllocation() {
   setupProposedAssetRows();
   const donut = document.getElementById("proposedAssetDonut");
@@ -377,7 +518,7 @@ function futureValues(start, contribution, roi) {
   return years.map((year) => {
     let value = start;
     for (let i = 0; i < year; i += 1) {
-      value = value * (1 + roi) + contribution;
+      value = (value + contribution) * (1 + roi);
     }
     return Math.max(0, Math.round(value));
   });
@@ -447,25 +588,18 @@ function collectPlanningValues() {
 
 function buildProjection() {
   const values = collectPlanningValues();
-  const positiveSurplus = Math.max(0, values.annualSurplus);
-  const beforeContribution = positiveSurplus * 0.65;
-  const afterContribution = positiveSurplus + values.savingsInvestment * 0.2;
+  const targetYears = getFinancialIndependenceYears();
+  years = Array.from({ length: targetYears + 1 }, (_, index) => index);
 
-  const beforeTotal = futureValues(values.netWorth, beforeContribution, 0.03);
-
-  const cashContribution = afterContribution * 0.38;
-  const cpfContribution = Math.max(0, values.cpfSurplus) * 0.65;
-  const srsContribution = Math.max(0, inputValue('[data-inflow="srs"]')) + afterContribution * 0.17;
-  const propertyContribution = afterContribution * 0.2;
+  const beforeStart = parseCurrencyValue(document.getElementById("summaryProposedAssetTotal")?.value);
+  const beforeRoi = parsePercentValue(document.getElementById("summaryProposedAwr")?.value);
+  const afterRoi = parsePercentValue(document.getElementById("proposedTableAwr")?.textContent);
+  const beforeTotal = futureValues(beforeStart, values.savingsInvestment, beforeRoi);
+  const afterTotal = futureValues(beforeStart, values.savingsInvestment, afterRoi);
 
   const afterSeries = [
-    { name: "Cash Portfolio", color: colors.cash, values: futureValues(values.cashPortfolio, cashContribution, 0.045) },
-    { name: "CPF Portfolio", color: colors.cpf, values: futureValues(values.cpf, cpfContribution, 0.035) },
-    { name: "SRS Portfolio", color: colors.srs, values: futureValues(values.srs, srsContribution, 0.05) },
-    { name: "Property / Others", color: colors.gold, values: futureValues(values.property, propertyContribution, 0.025) }
+    { name: "After Implementation", color: colors.total, values: afterTotal }
   ];
-
-  const afterTotal = years.map((_, index) => afterSeries.reduce((total, item) => total + item.values[index], 0));
 
   return {
     before: [
@@ -496,13 +630,13 @@ function summaryFor(mode, projection) {
   };
   const improvementText = mode === "before"
     ? "Baseline"
-    : `${formatCurrency(projection.summary.improvement)} assets, ${formatCurrency(projection.summary.improvement * 0.04)}/year`;
+    : `${projectionAmount(projection.summary.improvement)} assets, ${projectionAmount(projection.summary.improvement * 0.04)}/year`;
 
   return {
     title: titles[mode],
-    asset: formatCurrency(asset),
-    annual: formatCurrency(annual),
-    monthly: formatCurrency(monthly),
+    asset: projectionAmount(asset),
+    annual: projectionAmount(annual),
+    monthly: projectionAmount(monthly),
     improvement: improvementText
   };
 }
@@ -510,6 +644,7 @@ function summaryFor(mode, projection) {
 function updatePlanningTotals() {
   const values = collectPlanningValues();
   updateObjectiveVisuals();
+  updateSavingsAllocation(values);
   updateProposedAssetAllocation();
   updateIncomeAllocation(values);
   updateInsuranceNeeds(values);
@@ -650,16 +785,19 @@ function draw(mode) {
   const innerHeight = height - margin.top - margin.bottom;
   const allValues = series.flatMap((item) => item.values);
   const maxValue = Math.max(250000, Math.ceil(Math.max(...allValues) / 250000) * 250000);
+  const finalYear = years.at(-1) ?? 0;
+  const maxYear = Math.max(1, finalYear);
+  const fiAge = inputValue('[data-profile="age"]') + finalYear;
   const yTicks = 5;
 
-  const x = (year) => margin.left + (year / 14) * innerWidth;
+  const x = (year) => margin.left + (year / maxYear) * innerWidth;
   const y = (value) => margin.top + innerHeight - (value / maxValue) * innerHeight;
 
   for (let i = 0; i <= yTicks; i += 1) {
     const value = (maxValue / yTicks) * i;
     const yy = y(value);
     svg.appendChild(create("line", { x1: margin.left, x2: margin.left + innerWidth, y1: yy, y2: yy, class: "grid-line" }));
-    svg.appendChild(create("text", { x: margin.left - 16, y: yy + 5, "text-anchor": "end", class: "axis-text" }, moneyLabel(value)));
+    svg.appendChild(create("text", { x: margin.left - 16, y: yy + 5, "text-anchor": "end", class: "axis-text" }, projectionShortAmount(value)));
   }
 
   years.forEach((year) => {
@@ -671,11 +809,12 @@ function draw(mode) {
   svg.appendChild(create("line", { x1: margin.left, x2: margin.left, y1: margin.top, y2: margin.top + innerHeight, stroke: "#9daabd", "stroke-width": 1.5 }));
   svg.appendChild(create("line", { x1: margin.left, x2: margin.left + innerWidth, y1: margin.top + innerHeight, y2: margin.top + innerHeight, stroke: "#9daabd", "stroke-width": 1.5 }));
 
-  const fiX = x(14);
+  const fiX = x(finalYear);
   svg.appendChild(create("line", { x1: fiX, x2: fiX, y1: margin.top, y2: margin.top + innerHeight, class: "fi-line" }));
-  svg.appendChild(create("text", { x: fiX - 10, y: margin.top + 18, "text-anchor": "end", class: "axis-text" }, "FI Age 60"));
+  const fiLabelY = Math.max(margin.top + 8, y(Math.max(...allValues)) - 72);
+  svg.appendChild(create("text", { x: fiX - 10, y: fiLabelY, "text-anchor": "end", class: "axis-text fi-age-label" }, `FI Age ${fiAge}`));
 
-  series.forEach((item) => {
+  series.forEach((item, seriesIndex) => {
     const points = item.values.map((value, index) => `${x(years[index])},${y(value)}`).join(" ");
     const polyline = create("polyline", {
       points,
@@ -695,11 +834,15 @@ function draw(mode) {
     });
 
     const finalValue = item.values[item.values.length - 1];
-    const finalX = x(14);
+    const finalX = x(years[item.values.length - 1] ?? finalYear);
     const finalY = y(finalValue);
-    const pill = create("g", { class: "value-pill" });
-    pill.appendChild(create("rect", { x: finalX + 14, y: finalY - 18, width: 96, height: 32, fill: item.color }));
-    pill.appendChild(create("text", { x: finalX + 62, y: finalY + 4, "text-anchor": "middle" }, moneyLabel(finalValue)));
+    const isCompare = mode === "compare";
+    const pillWidth = isCompare ? 76 : 96;
+    const pillHeight = isCompare ? 24 : 32;
+    const pillOffset = isCompare ? (seriesIndex === 0 ? 14 : -14) : 0;
+    const pill = create("g", { class: `value-pill${isCompare ? " compact" : ""}` });
+    pill.appendChild(create("rect", { x: finalX + 14, y: finalY - pillHeight / 2 + pillOffset, width: pillWidth, height: pillHeight, fill: item.color }));
+    pill.appendChild(create("text", { x: finalX + 14 + pillWidth / 2, y: finalY + 4 + pillOffset, "text-anchor": "middle" }, projectionShortAmount(finalValue)));
     svg.appendChild(pill);
   });
 
@@ -715,7 +858,12 @@ function draw(mode) {
   });
 
   chartTitle.textContent = summary.title;
-  assetAtFi.textContent = summary.asset;
+  const beforeFiLabel = document.getElementById("beforeFiAssetSummaryLabel");
+  const afterFiLabel = document.getElementById("afterFiAssetSummaryLabel");
+  if (beforeFiLabel) beforeFiLabel.textContent = `Before assets at FI age ${fiAge}`;
+  if (afterFiLabel) afterFiLabel.textContent = `After assets at FI age ${fiAge}`;
+  if (beforeAssetAtFi) beforeAssetAtFi.textContent = projectionAmount(projection.summary.beforeAsset);
+  if (afterAssetAtFi) afterAssetAtFi.textContent = projectionAmount(projection.summary.afterAsset);
   annualIncome.textContent = summary.annual;
   monthlyIncome.textContent = summary.monthly;
   improvement.textContent = summary.improvement;
@@ -731,6 +879,11 @@ document.querySelectorAll(".toggle button").forEach((button) => {
 
 document.querySelectorAll("input[type='number']").forEach((input) => {
   input.addEventListener("input", () => draw(currentMode));
+});
+
+document.querySelectorAll(".summary-edit").forEach((input) => {
+  input.addEventListener("input", () => draw(currentMode));
+  input.addEventListener("change", () => draw(currentMode));
 });
 
 document.getElementById("desiredAnnualIncome")?.addEventListener("input", (event) => {

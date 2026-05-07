@@ -22,6 +22,7 @@
         <a href="#cashflow">Cashflow</a>
         <a href="#insurance">Insurance</a>
         <a href="#allocation">Allocation</a>
+        <a href="#proposed-savings">Proposed Savings</a>
         <a href="#proposed-assets">Proposed Assets</a>
         <a href="#projection">FI Projection</a>
         <a href="#recommendations">Recommendations</a>
@@ -41,7 +42,7 @@
         <div>
           <p class="eyebrow">Section 1</p>
           <h2>Client Profile</h2>
-          <p class="section-copy">Simple personal details for client and spouse. This becomes the anchor for age-based timelines, CPF assumptions, and risk calculations.</p>
+          <p class="section-copy">Every detail matters; your unique story shapes our strategy.</p>
         </div>
         <div class="panel">
           <div class="profile-grid">
@@ -95,7 +96,7 @@
           <div>
             <p class="eyebrow">Section 2</p>
             <h2>Financial Objectives</h2>
-            <p class="section-copy">Enter one financial independence objective and two other goals. The timeline uses client age plus years to achieve, and the bar chart shows the amount required.</p>
+            <p class="section-copy">Live your life with the least regrets possible.</p>
           </div>
         </div>
         <div class="panel objective-panel">
@@ -159,7 +160,7 @@
           <div>
             <p class="eyebrow">Section 3</p>
             <h2>Assets & Liabilities Input</h2>
-            <p class="section-copy">Enter current assets and liabilities in the same planning categories used by the workbook. These totals feed net worth and the projection starting point.</p>
+            <p class="section-copy">Keep your daytime job, but start buying real assets, not liabilities.</p>
           </div>
           <div class="summary-stack">
             <div><span>Total Assets</span><strong id="totalAssets">S$0</strong></div>
@@ -206,7 +207,7 @@
           <div>
             <p class="eyebrow">Section 4</p>
             <h2>Annual Inflow & Outflow Input</h2>
-            <p class="section-copy">Use annualized amounts for cash and CPF movement. This follows the workbook structure: inflows, outflows, savings and investment, CPF usage, and surplus/shortfall.</p>
+            <p class="section-copy">Is money oozing in or out from your spending?</p>
           </div>
           <div class="summary-stack">
             <div><span>Total Inflow</span><strong id="totalInflow">S$0</strong></div>
@@ -269,6 +270,7 @@
         <div>
           <p class="eyebrow">Section 5</p>
           <h2>Insurance Summary</h2>
+          <p class="section-copy">Success is about risk management, instead of confusing volatility with risk.</p>
         </div>
         <div class="panel insurance-panel">
           <label class="single-input">Desired Annual Recurrent Income <input type="number" min="0" step="1000" id="desiredAnnualIncome" value="0"></label>
@@ -291,6 +293,7 @@
         <div>
           <p class="eyebrow">Section 6</p>
           <h2>Income Allocation</h2>
+          <p class="section-copy">Your income fuels your present, but strategizing your income shapes your future.</p>
         </div>
         <div class="allocation-layout">
           <div class="donut" id="incomeAllocationDonut" aria-label="Income allocation chart"></div>
@@ -304,17 +307,63 @@
         </div>
       </section>
 
+      <section id="proposed-savings" class="data-section">
+        <div>
+          <p class="eyebrow">Section 7</p>
+          <h2>Proposed Savings Allocation</h2>
+          <p class="quote-copy">Savings never make you rich. Savings only make you less poor. Investments also won't make you rich. Only increase savings into your investment will build you wealth.</p>
+        </div>
+        <div class="panel savings-allocation-panel">
+          <table class="savings-allocation-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th colspan="2">Current</th>
+                <th colspan="2">Proposed</th>
+              </tr>
+              <tr>
+                <th></th>
+                <th>Amount ($)</th>
+                <th>Allocation (%)</th>
+                <th>Amount ($)</th>
+                <th>Allocation (%)</th>
+              </tr>
+            </thead>
+            <tbody id="savingsAllocationRows"></tbody>
+            <tfoot>
+              <tr>
+                <th>Total</th>
+                <th id="savingsCurrentTotal">S$0</th>
+                <th id="savingsCurrentAllocationTotal">100.0</th>
+                <th id="savingsProposedTotal">S$0</th>
+                <th id="savingsProposedAllocationTotal">100.0</th>
+              </tr>
+            </tfoot>
+          </table>
+          <div class="savings-chart-grid">
+            <div class="savings-chart-card">
+              <div class="savings-donut" id="savingsCurrentDonut"></div>
+              <div class="savings-legend" id="savingsCurrentLegend"></div>
+            </div>
+            <div class="savings-chart-card">
+              <div class="savings-donut" id="savingsProposedDonut"></div>
+              <div class="savings-legend" id="savingsProposedLegend"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="proposed-assets" class="data-section">
         <div class="section-heading-row">
           <div>
-            <p class="eyebrow">Section 7</p>
+            <p class="eyebrow">Section 8</p>
             <h2>Proposed Assets Allocation</h2>
-            <p class="section-copy">Current allocation is pulled from Section 3 assets, excluding home/property. Proposed amount starts the same as current, ROI is editable, and return is calculated automatically.</p>
+            <p class="section-copy">An intelligent investor is never ready, only prepared.</p>
           </div>
           <div class="summary-stack">
             <div><span>Total Proposed Assets</span><input class="summary-edit" id="summaryProposedAssetTotal" type="text" readonly value="S$0"></div>
             <div><span>Total Return</span><input class="summary-edit" id="summaryProposedReturnTotal" type="text" value="S$0"></div>
-            <div class="accent"><span>Average Weighted Return</span><input class="summary-edit" id="summaryProposedAwr" type="text" value="0.00%"></div>
+            <div class="accent"><span>Current Average Weighted Return</span><input class="summary-edit" id="summaryProposedAwr" type="text" value="0.00%"></div>
           </div>
         </div>
         <div class="proposed-assets-layout">
@@ -356,12 +405,26 @@
         </div>
       </section>
 
+
+      <section id="recommendations" class="section-grid">
+        <div>
+          <p class="eyebrow">Section 9</p>
+          <h2>Recommendations & Export</h2>
+          <p class="section-copy">It is not the lack of professionalism, but the lack of love that makes it work.</p>
+        </div>
+        <div class="panel recommendation-list">
+          <div><strong>Immediate</strong><span>Build emergency fund to 6 months of expenses.</span></div>
+          <div><strong>Immediate</strong><span>Close death, TPD, and CI protection gaps.</span></div>
+          <div><strong>12 months</strong><span>Redirect surplus into proposed asset allocation.</span></div>
+          <div><strong>Annual</strong><span>Review assumptions, portfolio value, and objective progress.</span></div>
+        </div>
+      </section>
       <section id="projection" class="projection-section">
         <div class="section-heading-row">
           <div>
-            <p class="eyebrow">Main Client Visual</p>
+            <p class="eyebrow">Section 10</p>
             <h2>Financial Independence Projection</h2>
-            <p class="section-copy">A chart like your sample: assets grow each year from current holdings, annual surplus, and assumed ROI. Toggle before and after implementation to show the value of taking action.</p>
+            <p class="section-copy">If your life is worth living, your goals are worth achieving, your future is worth planning.</p>
           </div>
           <div class="toggle" role="tablist" aria-label="Projection mode">
             <button type="button" data-mode="before">Before</button>
@@ -383,37 +446,28 @@
 
         <div class="projection-summary">
           <div>
-            <span>Projected assets at FI age 60</span>
-            <strong id="assetAtFi">S$1,795,000</strong>
+            <span id="beforeFiAssetSummaryLabel">Before assets at FI age 60</span>
+            <strong id="beforeAssetAtFi">0.00</strong>
+          </div>
+          <div>
+            <span id="afterFiAssetSummaryLabel">After assets at FI age 60</span>
+            <strong id="afterAssetAtFi">0.00</strong>
           </div>
           <div>
             <span>Annual recurrent income at 4%</span>
-            <strong id="annualIncome">S$71,800</strong>
+            <strong id="annualIncome">71,800.00</strong>
           </div>
           <div>
             <span>Monthly recurrent income</span>
-            <strong id="monthlyIncome">S$5,983</strong>
+            <strong id="monthlyIncome">5,983.00</strong>
           </div>
           <div>
             <span>Improvement vs before</span>
-            <strong id="improvement">+S$475,000</strong>
+            <strong id="improvement">475,000.00</strong>
           </div>
         </div>
       </section>
 
-      <section id="recommendations" class="section-grid">
-        <div>
-          <p class="eyebrow">Section 8</p>
-          <h2>Recommendations & Export</h2>
-          <p class="section-copy">The final view becomes a presentation-ready action list with person-in-charge, timeframe, and optional PDF export.</p>
-        </div>
-        <div class="panel recommendation-list">
-          <div><strong>Immediate</strong><span>Build emergency fund to 6 months of expenses.</span></div>
-          <div><strong>Immediate</strong><span>Close death, TPD, and CI protection gaps.</span></div>
-          <div><strong>12 months</strong><span>Redirect surplus into proposed asset allocation.</span></div>
-          <div><strong>Annual</strong><span>Review assumptions, portfolio value, and objective progress.</span></div>
-        </div>
-      </section>
     </main>
   </div>
   <script src="script.js"></script>
